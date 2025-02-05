@@ -1,47 +1,73 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
+  <div class="row">
+    <div class="col-6">
+      <h3>Draggable {{ draggingInfo }}</h3>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+      <draggable :list="list" :disabled="!enabled" item-key="name" class="list-group" ghost-class="ghost"
+        :move="checkMove" @start="dragging = true" @end="dragging = false">
+        <template #item="{ element }">
+          <div class="list-group-item" :class="{ 'not-draggable': !enabled }">
+            {{ element.name }}
+          </div>
+        </template>
+      </draggable>
     </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+    <div>
+      {{ JSON.stringify(list, null, 4) }}
+    </div>
+  </div>
 </template>
 
+<script>
+import draggable from "vuedraggable";
+let id = 1;
+export default {
+  name: "simple",
+  display: "Simple",
+  order: 0,
+  components: {
+    draggable
+  },
+  data() {
+    return {
+      enabled: true,
+      list: [
+        { name: "John", id: 0 },
+        { name: "Joao", id: 1 },
+        { name: "Jean", id: 2 }
+      ],
+      dragging: false
+    };
+  },
+  computed: {
+    draggingInfo() {
+      return this.dragging ? "under drag" : "";
+    }
+  },
+  methods: {
+    add: function () {
+      this.list.push({ name: "Juan " + id, id: id++ });
+    },
+    replace: function () {
+      this.list = [{ name: "Edgard", id: id++ }];
+    },
+    checkMove: function (e) {
+      window.console.log("Future index: " + e.draggedContext.futureIndex);
+    }
+  }
+};
+</script>
 <style scoped>
-header {
-  line-height: 1.5;
+.buttons {
+  margin-top: 35px;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+.ghost {
+  opacity: 0.5;
+  background: #c8ebfb;
 }
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+.not-draggable {
+  cursor: no-drop;
 }
 </style>
