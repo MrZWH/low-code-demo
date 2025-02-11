@@ -19,3 +19,11 @@ JSON Schema规范中文版: json-schema.apifox.cn
 ## monorepo
 
 pnpm 的方式
+
+## tailwindcss
+
+```
+pnpm add -D tailwindcss postcss autoprefixer
+
+npx tailwindcss init -p
+```
